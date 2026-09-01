@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Monitor de Validación en Tiempo Real
+    </title>
+
+   <link
+        rel="stylesheet"
+        href="/static/style.css?v=20260831"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER                                             -->
+    <!-- ================================================== -->
+
+    <header class="header">
+
+        <div class="header-content">
+
+            <div>
+
+                <h1>
+                    Monitor de Validación en Tiempo Real
+                </h1>
+
+                <p>
+                    Apache Kafka · Apache Flink · Cassandra
+                </p>
+
+            </div>
+
+
+            <div class="status-general">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Sistema activo
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- CONTENIDO PRINCIPAL                                -->
+    <!-- ================================================== -->
+
+    <main class="container">
+
+
+        <!-- ================================================== -->
+        <!-- MÉTRICAS PRINCIPALES                               -->
+        <!-- ================================================== -->
+
+        <section class="metrics-grid">
+
+
+            <!-- TPS -->
+
+            <div class="metric-card">
+
+                <div class="metric-title">
+                    Rendimiento
+                </div>
+
+                <div
+                    id="rendimiento"
+                    class="metric-value"
+                >
+                    0
+                </div>
+
+                <div class="metric-unit">
+                    TPS
+                </div>
+
+            </div>
+
+
+
+            <!-- LATENCIA -->
+
+            <div class="metric-card">
+
+                <div class="metric-title">
+                    Latencia promedio
+                </div>
+
+                <div
+                    id="latencia-promedio"
+                    class="metric-value"
+                >
+                    0
+                </div>
+
+                <div class="metric-unit">
+                    ms
+                </div>
+
+            </div>
+
+
+
+            <!-- ANOMALÍAS -->
+
+            <div class="metric-card">
+
+                <div class="metric-title">
+                    Anomalías detectadas
+                </div>
+
+                <div
+                    id="porcentaje-anomalias"
+                    class="metric-value"
+                >
+                    0
+                </div>
+
+                <div class="metric-unit">
+                    %
+                </div>
+
+            </div>
+
+
+
+            <!-- F1 -->
+
+            <div class="metric-card">
+
+                <div class="metric-title">
+                    F1-Score
+                </div>
+
+                <div
+                    id="f1-score"
+                    class="metric-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- RENDIMIENTO TEMPORAL                               -->
+        <!-- ================================================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Rendimiento temporal
+                    </h2>
+
+                    <p>
+                        Métricas de procesamiento de los eventos
+                        recientes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Latencia mínima
+                    </span>
+
+                    <strong>
+                        <span id="latencia-minima">0</span>
+                        ms
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Latencia máxima
+                    </span>
+
+                    <strong>
+                        <span id="latencia-maxima">0</span>
+                        ms
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Latencia P95
+                    </span>
+
+                    <strong>
+                        <span id="latencia-p95">0</span>
+                        ms
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Eventos en ventana
+                    </span>
+
+                    <strong id="eventos-ventana">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- CALIDAD DE DETECCIÓN                               -->
+        <!-- ================================================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Calidad de detección
+                    </h2>
+
+                    <p>
+                        Evaluación mediante matriz de confusión.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="confusion-grid">
+
+
+                <div class="confusion-item">
+
+                    <span>
+                        Verdaderos positivos
+                    </span>
+
+                    <strong id="tp">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="confusion-item">
+
+                    <span>
+                        Verdaderos negativos
+                    </span>
+
+                    <strong id="tn">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="confusion-item">
+
+                    <span>
+                        Falsos positivos
+                    </span>
+
+                    <strong id="fp">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="confusion-item">
+
+                    <span>
+                        Falsos negativos
+                    </span>
+
+                    <strong id="fn">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats-grid quality-stats">
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Precision
+                    </span>
+
+                    <strong id="precision">
+                        0 %
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Recall / Tasa detección
+                    </span>
+
+                    <strong id="recall">
+                        0 %
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        FPR
+                    </span>
+
+                    <strong id="fpr">
+                        0 %
+                    </strong>
+
+                </div>
+
+
+
+                <div class="stat-item">
+
+                    <span class="stat-label">
+                        Eventos evaluados
+                    </span>
+
+                    <strong id="total-evaluados">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- INFRAESTRUCTURA                                    -->
+        <!-- ================================================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Estado de infraestructura
+                    </h2>
+
+                    <p>
+                        Estado actual de los componentes
+                        de la arquitectura.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="infrastructure-grid">
+
+
+                <div class="infrastructure-item">
+
+                    <div class="infrastructure-name">
+                        Apache Kafka
+                    </div>
+
+                    <div
+                        id="estado-kafka"
+                        class="infrastructure-status pendiente"
+                    >
+                        Verificando...
+                    </div>
+
+                </div>
+
+
+
+                <div class="infrastructure-item">
+
+                    <div class="infrastructure-name">
+                        Apache Flink
+                    </div>
+
+                    <div
+                        id="estado-flink"
+                        class="infrastructure-status pendiente"
+                    >
+                        Verificando...
+                    </div>
+
+                </div>
+
+
+
+                <div class="infrastructure-item">
+
+                    <div class="infrastructure-name">
+                        Cassandra
+                    </div>
+
+                    <div
+                        id="estado-cassandra"
+                        class="infrastructure-status pendiente"
+                    >
+                        Verificando...
+                    </div>
+
+                </div>
+
+
+
+                <div class="infrastructure-item">
+
+                    <div class="infrastructure-name">
+                        API de monitoreo
+                    </div>
+
+                    <div
+                        id="estado-api"
+                        class="infrastructure-status pendiente"
+                    >
+                        Verificando...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- TRANSACCIONES                                      -->
+        <!-- ================================================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Validaciones recientes
+                    </h2>
+
+                    <p>
+                        Últimos eventos procesados por
+                        el flujo de validación.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Monto</th>
+
+                            <th>Frecuencia</th>
+
+                            <th>Esperado</th>
+
+                            <th>Detectado</th>
+
+                            <th>Evaluación</th>
+
+                            <th>Latencia</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tabla-validaciones">
+
+                        <tr>
+
+                            <td colspan="7">
+                                Cargando transacciones...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================================================== -->
+    <!-- FOOTER                                             -->
+    <!-- ================================================== -->
+
+    <footer class="footer">
+
+        <p>
+            Plataforma experimental para validación
+            de datos en flujos continuos
+        </p>
+
+    </footer>
+
+
+
+    <!-- ================================================== -->
+    <!-- JAVASCRIPT                                         -->
+    <!-- ================================================== -->
+
+    <script src="/static/app.js"></script>
+
+</body>
+
+</html>
